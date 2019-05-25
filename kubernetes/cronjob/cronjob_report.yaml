@@ -1,0 +1,36 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: report
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: report
+            image: gcr.io/[PROJECT ID]/vuls/vuls
+            command: ["/bin/sh","-c"]
+            args:
+              - vuls report -format-full-text -to-chatwork -lang=ja
+            volumeMounts:
+            - name: vuls-db
+              mountPath: /vuls
+            - name: vuls-config
+              mountPath: /vuls/config.toml
+              subPath: config.toml
+            - name: secret-key
+              mountPath: /etc/ssh-key
+          restartPolicy: OnFailure
+          volumes:
+          - name: vuls-db
+            persistentVolumeClaim:
+              claimName: vulnerability-db
+          - name: vuls-config
+            configMap:
+              name: vuls-config
+          - name: secret-key
+            secret:
+              secretName: vuls-scan-key
+              defaultMode: 256

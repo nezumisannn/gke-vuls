@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fetch-nvd
+spec:
+  template:
+    spec:
+      containers:
+      - name: go-cve-dictionary
+        image: gcr.io/[PROJECT ID]/vuls/go-cve-dictionary
+        command: ["/bin/sh","-c"]
+        args:
+          - for i in `seq 2002 $(date +"%Y")`; do go-cve-dictionary fetchnvd -years $i; done
+        volumeMounts:
+        - name: vuls-db
+          mountPath: /vuls
+      restartPolicy: Never
+      volumes:
+      - name: vuls-db
+        persistentVolumeClaim:
+          claimName: vulnerability-db

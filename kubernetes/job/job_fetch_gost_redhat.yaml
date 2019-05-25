@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fetch-gost-redhat
+spec:
+  template:
+    spec:
+      containers:
+      - name: fetch-gost-redhat
+        image: gcr.io/[PROJECT ID]/vuls/gost
+        command: ["/bin/sh","-c"]
+        args:
+          - gost fetch redhat
+        volumeMounts:
+        - name: vuls-db
+          mountPath: /vuls
+      restartPolicy: Never
+      volumes:
+      - name: vuls-db
+        persistentVolumeClaim:
+          claimName: vulnerability-db

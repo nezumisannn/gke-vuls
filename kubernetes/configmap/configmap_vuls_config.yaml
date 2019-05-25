@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vuls-config
+data:
+  config.toml: |
+    [servers]
+
+    [servers.localhost]
+    host = "localhost"
+    port = "local"
+
+    [servers.test-server]
+    host    = "test-server"
+    port    = "22"
+    user    = "vuls-user"
+    keyPath = "/etc/ssh-key/id_rsa"
+
+    [chatwork]
+    room = "XXXXXXXXX"
+    apiToken = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"

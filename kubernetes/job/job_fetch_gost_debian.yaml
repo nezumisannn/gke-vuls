@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fetch-gost-debian
+spec:
+  template:
+    spec:
+      containers:
+      - name: fetch-gost-debian
+        image: gcr.io/[PROJECT ID]/vuls/gost
+        command: ["/bin/sh","-c"]
+        args:
+          - gost fetch debian
+        volumeMounts:
+        - name: vuls-db
+          mountPath: /vuls
+      restartPolicy: Never
+      volumes:
+      - name: vuls-db
+        persistentVolumeClaim:
+          claimName: vulnerability-db

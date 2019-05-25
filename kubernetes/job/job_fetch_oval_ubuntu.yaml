@@ -1,0 +1,21 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: fetch-oval-ubuntu
+spec:
+  template:
+    spec:
+      containers:
+      - name: fetch-oval-ubuntu
+        image: gcr.io/[PROJECT ID]/vuls/goval-dictionary
+        command: ["/bin/sh","-c"]
+        args:
+          - goval-dictionary fetch-ubuntu 12 14 16 18
+        volumeMounts:
+        - name: vuls-db
+          mountPath: /vuls
+      restartPolicy: Never
+      volumes:
+      - name: vuls-db
+        persistentVolumeClaim:
+          claimName: vulnerability-db
